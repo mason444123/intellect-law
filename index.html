@@ -935,12 +935,22 @@ function refreshScroll() {
   ScrollTrigger.refresh();
 }
 gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
-  const lenis = window.lenis = new Lenis({ lerp: .085, anchors: { offset: -navHeight() } });
-  const tick = time => lenis.raf(time * 1000);
-  lenis.on('scroll', ScrollTrigger.update);
-  gsap.ticker.add(tick);
-  gsap.ticker.lagSmoothing(0);
-  return () => { gsap.ticker.remove(tick); gsap.ticker.lagSmoothing(500, 33); lenis.destroy(); window.lenis = null; };
+  // Telegram WebView: жёсткая правка дёрганого скролла.
+  // 1) viewport дёргается из-за панелей телеги — игнорируем эти resize,
+  //    чтобы ScrollTrigger не пересчитывал триггеры на каждый чих.
+  ScrollTrigger.config({ ignoreMobileResize: true, autoRefreshEvents: 'DOMContentLoaded,load' });
+  // 2) в телеге Lenis сам по себе дёргает скролл (слабый rAF в WebView) —
+  //    отдаём скролл нативному движку, GSAP-анимации остаются.
+  const isTelegram = /Telegram/i.test(navigator.userAgent);
+  const lenis = isTelegram ? null : window.lenis = new Lenis({ lerp: .085, anchors: { offset: -navHeight() } });
+  if (lenis) {
+    const tick = time => lenis.raf(time * 1000);
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(tick);
+    gsap.ticker.lagSmoothing(0);
+    return () => { gsap.ticker.remove(tick); gsap.ticker.lagSmoothing(500, 33); lenis.destroy(); window.lenis = null; };
+  }
+  window.lenis = null;
 });
 let resizeTimer;
 window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(refreshScroll, 200); });
