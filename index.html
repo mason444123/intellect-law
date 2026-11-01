@@ -867,7 +867,7 @@ select.m-field__input { appearance: none; background: linear-gradient(45deg, tra
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.3/dist/lenis.min.js"></script>
 <script data-8b-part="motion-queue">
 (() => {
   'use strict';
@@ -939,11 +939,16 @@ gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
   // Telegram WebView: scroll-события приходят скачками -> scrub-анимации дёргаются,
   // а панели телеги дёргают viewport -> лишние пересчёты триггеров.
   // Лечение: ignoreMobileResize + normalizeScroll (rAF-ведущий скролл, GSAP's built-in).
-  if (isTelegramWebView()) {
-    ScrollTrigger.config({ ignoreMobileResize: true, autoRefreshEvents: 'DOMContentLoaded,load' });
-    ScrollTrigger.normalizeScroll({ force: false, limitAnimationFrame: true });
-  }
-  const lenis = window.lenis = new Lenis({ lerp: .085, anchors: { offset: -navHeight() } });
+  ScrollTrigger.config({ ignoreMobileResize: true, autoRefreshEvents: 'DOMContentLoaded,load' });
+  const lenis = window.lenis = new Lenis({
+    lerp: .085,
+    anchors: { offset: -navHeight() },
+    // Telegram WebView: scroll-события скачут и анимации дёргаются.
+    // syncTouch (чинили в Lenis 1.3.5+) ведёт тач-скролл через rAF в-sync с GSAP.
+    syncTouch: isTelegramWebView(),
+    syncTouchLerp: .12,
+    touchMultiplier: 1.4
+  });
   const tick = time => lenis.raf(time * 1000);
   lenis.on('scroll', ScrollTrigger.update);
   gsap.ticker.add(tick);
@@ -975,7 +980,13 @@ const effects = {
     return gsap.timeline(vars).fromTo(element, { yPercent: -6 }, { yPercent: 6, ease: 'none', duration: 1 });
   }
 };
-const effectRanges = {
+const isTelegram = /Telegram/i.test(navigator.userAgent);
+const effectRanges = isTelegram ? {
+  // Telegram WebView: scrub-анимации прыгают из-за скачков scroll-событий —
+  // заменяем связку со скроллом на одиночные появления, без parallax.
+  ink: { start: 'top 92%', once: true },
+  rule: { start: 'top 90%', once: true }
+} : {
   ink: { start: 'top 88%', end: 'center 58%', scrub: .5 },
   rule: { start: 'top 90%', once: true },
   drift: { start: 'top bottom', end: 'bottom top', scrub: true }
