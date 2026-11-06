@@ -343,20 +343,24 @@ select.m-field__input { appearance: none; background: linear-gradient(45deg, tra
 </style>
 <style data-8b-part="section:offices">
 @layer sections {
-  #offices { padding: var(--space-2) var(--space-1) clamp(72px, 9vw, 128px); overflow-x: clip; }
-  #offices .offices__title { max-width: 860px; margin: 0 auto; text-align: center; }
-  #offices .offices__stage { --offices-r: clamp(300px, 40vw, 540px); --offices-size: clamp(92px, 11vw, 150px); position: relative; height: calc(var(--offices-r) * .84 + 92px); margin: clamp(24px, 3vw, 48px) calc(var(--space-1) * -1) 0; overflow: clip; -webkit-mask-image: linear-gradient(to bottom, var(--color-2) 82%, transparent); mask-image: linear-gradient(to bottom, var(--color-2) 82%, transparent); }
-  #offices .offices__ring { position: absolute; left: 50%; top: calc(var(--offices-r) + 92px); width: 0; height: 0; }
-  #offices .city { position: absolute; left: calc(var(--offices-size) / -2); top: calc(var(--offices-size) / -2); width: var(--offices-size); height: var(--offices-size); overflow: hidden; transform: rotate(calc(var(--city-i) * 19deg)) translateY(calc(var(--offices-r) * -1)); }
-  #offices .city img { width: 100%; height: 100%; object-fit: cover; }
-  #offices .offices__note { position: absolute; left: 50%; top: calc(var(--offices-r) * .47); width: min(440px, 76vw); translate: -50% 0; text-align: center; }
-  #offices .offices__list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px var(--space-1); margin-top: clamp(40px, 5vw, 72px); }
-  #offices .offices__list li { display: grid; justify-items: start; align-content: start; gap: 10px; padding-top: 22px; background: linear-gradient(var(--color-6), var(--color-6)) 0 0 / 100% 1px no-repeat; }
-  #offices .offices__city { font-family: var(--font-1); font-size: 24px; font-weight: 500; line-height: 1.1; letter-spacing: -.02em; }
+  #offices { padding: var(--space-2) var(--space-1); overflow: clip; background: var(--color-7); }
+  #offices .capital__head { display: grid; grid-template-columns: 1fr 1.65fr; gap: 32px var(--space-1); align-items: start; }
+  #offices .capital__eyebrow { color: var(--color-4); }
+  #offices .capital__intro { max-width: 850px; }
+  #offices .capital__lead { margin-top: 26px; max-width: 650px; }
+  #offices .capital__items { margin-top: clamp(52px, 7vw, 100px); }
+  #offices .capital__item { display: grid; grid-template-columns: 1fr 1.65fr; gap: 24px var(--space-1); padding: clamp(25px, 3vw, 42px) 0; border-top: 1px solid var(--color-6); }
+  #offices .capital__item:last-child { border-bottom: 1px solid var(--color-6); }
+  #offices .capital__number { display: inline-block; color: var(--color-4); }
+  #offices .capital__body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px clamp(24px, 3vw, 54px); align-items: baseline; }
+  #offices .capital__name { font-size: clamp(25px, 2.5vw, 36px); line-height: 1.1; letter-spacing: -.03em; font-weight: 500; }
+  #offices .capital__body p { max-width: 390px; line-height: 1.5; }
+  #offices .capital__cta { margin-top: 40px; }
   @media (max-width: 760px) {
-    #offices .offices__stage { --offices-r: 330px; --offices-size: 92px; height: 520px; }
-    #offices .offices__note { top: 196px; width: min(290px, 78vw); }
-    #offices .offices__list { grid-template-columns: minmax(0, 1fr); }
+    #offices .capital__head, #offices .capital__item { grid-template-columns: 1fr; gap: 18px; }
+    #offices .capital__body { grid-template-columns: 1fr; gap: 12px; }
+    #offices .capital__items { margin-top: 48px; }
+    #offices .capital__item { padding: 27px 0; }
   }
 }
 </style>
@@ -490,7 +494,7 @@ select.m-field__input { appearance: none; background: linear-gradient(45deg, tra
       <a class="m-link-2" href="#practice">Практики</a>
       <a class="m-link-2" href="#principles">Принципы</a>
       <a class="m-link-2" href="#matters">Дела</a>
-      <a class="m-link-2" href="#offices">Офисы</a>
+      <a class="m-link-2" href="#offices">Капитал и сделки</a>
       <a class="m-link-2" href="#people">Команда</a>
       <a class="m-link-2" href="#fees">Тарифы</a>
       <a class="m-link-2" href="#contact">Контакты</a>
@@ -504,7 +508,7 @@ select.m-field__input { appearance: none; background: linear-gradient(45deg, tra
       <a class="m-link-2" href="#practice">Практики</a>
       <a class="m-link-2" href="#principles">Принципы</a>
       <a class="m-link-2" href="#matters">Дела</a>
-      <a class="m-link-2" href="#offices">Офисы</a>
+      <a class="m-link-2" href="#offices">Капитал и сделки</a>
       <a class="m-link-2" href="#people">Команда</a>
       <a class="m-link-2" href="#fees">Тарифы</a>
       <a class="m-link-2" href="#contact">Контакты</a>
@@ -658,25 +662,21 @@ select.m-field__input { appearance: none; background: linear-gradient(45deg, tra
     </tbody>
   </table>
 </section>
-<!-- offices: an arc of ten city photos turning around a paragraph, then three office addresses and phones (animation: scene:offices) -->
-<section id="offices" class="offices" data-8b-section="offices">
-  <h2 class="m-text-3 offices__title">Работаем по всей России и за рубежом — без приёма в офисах.</h2>
-  <div class="offices__stage">
-    <ul class="offices__ring">
-      <li class="city" style="--city-i: -4.5"><img style="background:#c0c0c0" src="https://images.unsplash.com/photo-1758441395607-28172cc8d663?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8Mnx8TGlzYm9uJTIwdHJhbSUyMHN0cmVldHxlbnwxfDJ8fHwxNzkxNDAxMjgxfDA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=170&amp;q=60" alt="Лиссабон" width="1600" height="1600" loading="lazy"></li>
-      <li class="city" style="--city-i: -3.5"><img style="background:#597373" src="https://images.unsplash.com/photo-1739890806725-e9b82aeeb9ca?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8NHx8TWFkcmlkJTIwc3RyZWV0JTIwYnVpbGRpbmd8ZW58MXwyfHx8MTc5MTQwMTMwNHww&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=200&amp;q=60" alt="Мадрид" width="1600" height="1600" loading="lazy"></li>
-      <li class="city" style="--city-i: -2.5"><img style="background:#c0c0d9" src="https://images.unsplash.com/photo-1754138343152-c9be9eb2b30f?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8M3x8UGFyaXMlMjByb29mdG9wc3xlbnwxfDJ8fHwxNzkxNDAxMzAyfDA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=240&amp;q=60" alt="Париж" width="1600" height="1460" loading="lazy"></li>
-      <li class="city" style="--city-i: -1.5"><img style="background:#d9f3f3" src="https://images.unsplash.com/photo-1644518877761-cfcc7b9f05fc?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8M3x8TG9uZG9uJTIwc3RyZWV0JTIwYXJjaGl0ZWN0dXJlfGVufDF8Mnx8fDE3OTE0MDEyNzh8MA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=210&amp;q=60" alt="Лондон" width="1600" height="1760" loading="lazy"></li>
-      <li class="city" style="--city-i: -.5"><img style="background:#c0d9d9" src="https://images.unsplash.com/photo-1634565055864-06ac02738f15?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8MXx8RWRpbmJ1cmdoJTIwb2xkJTIwdG93bnxlbnwxfDJ8fHwxNzkxNDAxMjc3fDA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=180&amp;q=60" alt="Эдинбург — вид на замок" width="1600" height="1740" loading="lazy"></li>
-      <li class="city" style="--city-i: .5"><img style="background:#737373" src="https://images.unsplash.com/photo-1699791912534-007c6ea82878?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8Mnx8RHVibGluJTIwR2VvcmdpYW4lMjBkb29yc3xlbnwxfDJ8fHwxNzkxNDAxMjc5fDA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=180&amp;q=60" alt="Дублин" width="1600" height="1600" loading="lazy"></li>
-      <li class="city" style="--city-i: 1.5"><img style="background:#404040" src="https://images.unsplash.com/photo-1703870604716-70fa10dd2b3e?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8M3x8QW1zdGVyZGFtJTIwY2FuYWwlMjBob3VzZXN8ZW58MXwyfHx8MTc5MTQwMTI3OXww&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=210&amp;q=60" alt="Амстердам" width="1600" height="1600" loading="lazy"></li>
-      <li class="city" style="--city-i: 2.5"><img style="background:#d9d9d9" src="https://images.unsplash.com/photo-1736247150811-689481e7a778?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8Mnx8Q29wZW5oYWdlbiUyMGhhcmJvdXJ8ZW58MXwyfHx8MTc5MTQwMTI4MHww&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=220&amp;q=60" alt="Копенгаген" width="1600" height="1600" loading="lazy"></li>
-      <li class="city" style="--city-i: 3.5"><img style="background:#f3f3f3" src="https://images.unsplash.com/photo-1595036969386-a68369442612?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8Mnx8U3RvY2tob2xtJTIwb2xkJTIwdG93bnxlbnwxfDJ8fHwxNzkxNDAxMzAyfDA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=200&amp;q=60" alt="Стокгольм" width="1600" height="1600" loading="lazy"></li>
-      <li class="city" style="--city-i: 4.5"><img style="background:#40260c" src="https://images.unsplash.com/photo-1722089239079-562e29bac049?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8M3x8TWlsYW4lMjBhcmNoaXRlY3R1cmV8ZW58MXwyfHx8MTc5MTQwMTMwNXww&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=170&amp;q=60" alt="Милан" width="1600" height="1600" loading="lazy"></li>
-    </ul>
-    <p class="m-text-6 offices__note">Встречи в офисах мы сейчас не проводим — вся работа ведётся дистанционно. По международному налоговому праву и ВЭД — иностранные юрисдикции: структура, риски и отчётность решаются в одном окне.</p>
+<!-- capital: services for owners and groups -->
+<section id="offices" class="capital" data-8b-section="capital">
+  <div class="capital__head">
+    <p class="m-text-4 capital__eyebrow">Собственникам и группам компаний</p>
+    <div class="capital__intro">
+      <h2 class="m-text-3">Капитал, который работает на будущее.</h2>
+      <p class="m-text-6 capital__lead">Помогаем собственникам и группам компаний выстраивать структуру бизнеса, защищать активы и готовить передачу капитала.</p>
+    </div>
   </div>
-  
+  <ol class="capital__items">
+    <li class="capital__item"><span class="m-text-4 capital__number">01 /</span><div class="capital__body"><h3 class="capital__name">Личные фонды</h3><p class="m-text">Вопросы создания фондов, управления имуществом и передачи капитала следующим поколениям.</p></div></li>
+    <li class="capital__item"><span class="m-text-4 capital__number">02 /</span><div class="capital__body"><h3 class="capital__name">Защита активов</h3><p class="m-text">Структурирование активов с учётом семейных и корпоративных рисков — в России и за рубежом.</p></div></li>
+    <li class="capital__item"><span class="m-text-4 capital__number">03 /</span><div class="capital__body"><h3 class="capital__name">Слияния и поглощения</h3><p class="m-text">Юридическое и налоговое сопровождение сделок слияния и поглощения.</p></div></li>
+  </ol>
+  <a class="m-link capital__cta" href="#contact">Обсудить задачу</a>
 </section>
 <!-- partners: six partner portraits with practice, city and direct line, carried sideways by the scroll (animation: scene:people) -->
 <section id="people" class="people" data-8b-section="partners">
@@ -1128,17 +1128,14 @@ queueMotion(() => {
   });
 });
 </script>
-<script data-8b-part="scene:offices">
+<script data-8b-part="scene:capital">
 queueMotion(() => {
   gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
     const section = document.getElementById('offices');
-    const stage = section.querySelector('.offices__stage');
-    const ring = stage.querySelector('.offices__ring');
-    const timeline = gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: {
-      id: 'offices', trigger: stage, start: 'top bottom', end: 'center 55%', scrub: .8
-    }});
-    timeline.from(ring, { rotation: 40, duration: 1, ease: 'power1.out' }, 0);
-    ring.querySelectorAll('.city img').forEach(img => timeline.from(img, { scale: 1.35, duration: 1 }, 0));
+    gsap.from(section.querySelectorAll('.capital__item'), {
+      y: 18, opacity: 0, duration: .55, stagger: .10, ease: 'power2.out',
+      scrollTrigger: { trigger: section.querySelector('.capital__items'), start: 'top 85%', once: true }
+    });
   });
 });
 </script>
