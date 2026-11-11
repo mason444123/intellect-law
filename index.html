@@ -9,6 +9,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+function isTelegramWebView() {
+  return /Telegram/i.test(navigator.userAgent) || typeof window.TelegramWebviewProxy !== 'undefined' || typeof window.TelegramWebview !== 'undefined';
+}
+if (isTelegramWebView()) document.documentElement.classList.add('telegram-lite');
+</script>
+<style>
+html.telegram-lite #opening .opening__photo,
+html.telegram-lite #opening .opening__word,
+html.telegram-lite #opening .opening__lead-in,
+html.telegram-lite #opening .opening__fog { animation: none !important; }
+html.telegram-lite #nav .nav__bar { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--color-1); }
+</style>
 <title>Интеллектуальная защита — юристы и налоговые консультанты для бизнеса</title>
 <meta name="description" content="Юридический и налоговый консалтинг для бизнеса: защита при налоговых проверках, споры с ФНС и контрагентами, интеллектуальная собственность, персональные данные. Консультации и работа с документами дистанционно по всей России.">
 <meta property="og:type" content="website">
@@ -932,6 +945,7 @@ select.m-field__input { appearance: none; background: linear-gradient(45deg, tra
   window.motionReady = ready();
   parsed.then(() => { if (firstCount && !tail) firsts.then(refresh); });
   window.queueMotion = (setup, { first = false, near, id } = {}) => {
+    if (isTelegramWebView()) return;
     if (!window.gsap || typeof setup !== 'function') return;
     const name = id || document.currentScript?.getAttribute('data-8b-part') || 'motion';
     if (near instanceof Element && window.IntersectionObserver) {
@@ -960,13 +974,13 @@ function navHeight() {
   const bar = document.querySelector('#nav .nav__bar');
   return bar ? bar.offsetHeight : 0;
 }
-function isTelegramWebView() { return /Telegram/i.test(navigator.userAgent); }
 function refreshScroll() {
   if (window.lenis) window.lenis.options.anchors = { offset: -navHeight() };
   ScrollTrigger.sort();
   ScrollTrigger.refresh();
 }
 gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
+  if (isTelegramWebView()) return;
   // Telegram WebView: scroll-события приходят скачками -> scrub-анимации дёргаются,
   // а панели телеги дёргают viewport -> лишние пересчёты триггеров.
   // Лечение: ignoreMobileResize + normalizeScroll (rAF-ведущий скролл, GSAP's built-in).
