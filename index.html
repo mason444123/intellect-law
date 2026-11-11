@@ -501,7 +501,7 @@ select.m-field__input { appearance: none; background: linear-gradient(45deg, tra
       <a class="m-link-2" href="#fees">Тарифы</a>
       <a class="m-link-2" href="#contact">Контакты</a>
     </nav>
-    <a class="m-btn nav__cta" href="#contact"><span class="m-btn__label">Запросить консультацию</span></a>
+    <button class="m-btn nav__cta" type="button" data-open-consultation><span class="m-btn__label">Запросить консультацию</span></button>
     <button class="m-icon nav__toggle" type="button" aria-expanded="false" aria-controls="nav-menu"><span class="sr-only">Открыть меню</span><span class="m-icon__glyph" aria-hidden="true"></span></button>
   </div>
   <div class="nav__menu" id="nav-menu" data-lenis-prevent hidden>
@@ -515,7 +515,7 @@ select.m-field__input { appearance: none; background: linear-gradient(45deg, tra
       <a class="m-link-2" href="#fees">Тарифы</a>
       <a class="m-link-2" href="#contact">Контакты</a>
     </nav>
-    <a class="m-btn" href="#contact"><span class="m-btn__label">Запросить консультацию</span></a>
+    <button class="m-btn" type="button" data-open-consultation><span class="m-btn__label">Запросить консультацию</span></button>
   </div>
 </header>
 <main>
@@ -764,7 +764,7 @@ select.m-field__input { appearance: none; background: linear-gradient(45deg, tra
   <div class="faq__side">
     <h2 class="m-text-3">Вопросы до начала работы.</h2>
     <p class="m-text">Остальное спросите на консультации: мы работаем с письменными запросами и отвечаем письменно.</p>
-    <a class="m-btn" href="#contact"><span class="m-btn__label">Запросить консультацию</span></a>
+    <button class="m-btn" type="button" data-open-consultation><span class="m-btn__label">Запросить консультацию</span></button>
   </div>
   <div class="faq__list">
     <details class="qa" data-8b-motion="rule"><summary class="qa__q"><span>Как проходит первая консультация?</span><span class="qa__mark" aria-hidden="true"></span></summary><div class="qa__a"><p class="m-text">Сначала уточняем запрос и согласуем стоимость. Консультация платная; по итогам анализа предоставляем письменную правовую позицию.</p></div></details>
@@ -792,7 +792,7 @@ select.m-field__input { appearance: none; background: linear-gradient(45deg, tra
     <div class="contact__details">
       <div><p class="m-text-4">Новые обращения</p><a data-8b-placeholder="phone" class="m-link contact__big" href="tel:+79090063458">+7 (909) 006-34-58</a><a data-8b-placeholder="email" class="m-link" href="mailto:intellect-law@mail.ru">intellect-law@mail.ru</a></div>
       <div><p class="m-text-4">Формат работы</p><p class="m-text-7">Понедельник–пятница: с 06:30 до 19:00 по московскому времени. Приёма в офисах нет. Документы и консультации — дистанционно.</p></div>
-      <div><p class="m-text-4">Связаться в Telegram</p><a class="m-link" href="https://t.me/IntellectLawOfficial" target="_blank" rel="noopener noreferrer">Юрий Митин</a><a class="m-link" href="https://t.me/predproverka" target="_blank" rel="noopener noreferrer">Даниил Неволин</a></div>
+      <div><p class="m-text-4">Социальные сети</p><a class="m-link" href="https://t.me/IntellectLawOfficial" target="_blank" rel="noopener noreferrer">Юрий Митин</a><a class="m-link" href="https://t.me/predproverka" target="_blank" rel="noopener noreferrer">Даниил Неволин</a></div>
       <div class="contact__icons">
         <a data-8b-placeholder="email" class="m-icon" href="mailto:intellect-law@mail.ru"><span class="sr-only">Написать на почту</span><span class="m-icon__glyph" aria-hidden="true"><svg viewBox="0 0 18 18"><path d="M1.5 3.5h15v11h-15zM1.5 3.5 9 10l7.5-6.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></span></a>
       </div>
@@ -838,7 +838,18 @@ select.m-field__input { appearance: none; background: linear-gradient(45deg, tra
 (() => {
   const dialog = document.getElementById('consultation-dialog');
   const form = document.getElementById('consultation-form');
-  document.querySelectorAll('[data-open-consultation]').forEach(button => button.addEventListener('click', () => dialog.showModal()));
+  const openConsultation = () => { if (!dialog.open) dialog.showModal(); };
+  document.querySelectorAll('[data-open-consultation]').forEach(button => button.addEventListener('click', openConsultation));
+  if (location.hash === '#consultation') {
+    history.replaceState(null, '', location.pathname + location.search);
+    openConsultation();
+  }
+  window.addEventListener('hashchange', () => {
+    if (location.hash === '#consultation') {
+      history.replaceState(null, '', location.pathname + location.search);
+      openConsultation();
+    }
+  });
   dialog.querySelector('[data-close-consultation]').addEventListener('click', () => dialog.close());
   dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
   form.addEventListener('submit', event => {
@@ -870,7 +881,7 @@ select.m-field__input { appearance: none; background: linear-gradient(45deg, tra
   };
   toggle.addEventListener('click', () => setMenu(true));
   close.addEventListener('click', () => { setMenu(false); toggle.focus(); });
-  menu.addEventListener('click', event => { if (event.target.closest('a')) setMenu(false); });
+  menu.addEventListener('click', event => { if (event.target.closest('a, [data-open-consultation]')) setMenu(false); });
   document.addEventListener('keydown', event => { if (event.key === 'Escape' && !menu.hidden) { setMenu(false); toggle.focus(); } });
 })();
 </script>
